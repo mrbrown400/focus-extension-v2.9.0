@@ -1,4 +1,33 @@
 const blockURL = vendor.extension.getURL("/block.html");
+const breakPromptPath = "/break-ended.html";
+const breakPromptURL = vendor.extension.getURL(breakPromptPath);
+
+function openBreakEndPrompt() {
+    vendor.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        if (!tabs || !tabs.length) { return; }
+
+        const activeTab = tabs[0];
+        if (!activeTab || activeTab.id === undefined) { return; }
+
+        const params = new URLSearchParams({
+            tabId: String(activeTab.id),
+            url: activeTab.url || ""
+        });
+
+        vendor.windows.create({
+            url: `${breakPromptURL}?${params.toString()}`,
+            type: "popup",
+            width: 480,
+            height: 360,
+            focused: true
+        }, function () {
+            const err = vendor.runtime.lastError;
+            if (err) {
+                console.log(`Error opening break prompt: ${err.message}`);
+            }
+        });
+    });
+}
 
 const conn = new FocusConnection();
 conn.version = config.version;
@@ -54,7 +83,30 @@ conn.block = function (data) {
 };
 
 conn.onfocus = function () {
+    openBreakEndPrompt();
     processFrontmostTab();
 }
 
 conn.connect();
+
+vendor.runtime.onMessage.addListener(function (request) {
+    if (!request || !request.type) { return; }
+
+    if (request.type === "focus-leave-site") {
+        const tabId = Number(request.tabId);
+        if (Number.isNaN(tabId)) { return; }
+
+        vendor.tabs.remove(tabId, function () {
+            const removalError = vendor.runtime.lastError;
+            if (removalError) {
+                console.log(`Unable to close tab ${tabId}: ${removalError.message}`);
+                vendor.tabs.update(tabId, { url: blockURL }, function () {
+                    const updateError = vendor.runtime.lastError;
+                    if (updateError) {
+                        console.log(`Unable to update tab ${tabId}: ${updateError.message}`);
+                    }
+                });
+            }
+        });
+    }
+});
