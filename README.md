@@ -1,4 +1,4 @@
-# Focus Extension MV# Upgrade
+# Focus Extension MV3 Upgrade
 
 This repository tracks the work required to upgrade the Focus browser extension to the MV# architecture.
 
