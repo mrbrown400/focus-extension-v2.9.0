@@ -18,5 +18,7 @@
             "focus-connection.js",
             "focus.js"
         ]
-    }
+    },
+    //"key": ADD_YOUR_RSA_KEY_HERE
+
 }

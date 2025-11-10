@@ -1,0 +1,5 @@
+# Ignore private key material
+*.pem
+
+# Generated manifest
+manifest.json
