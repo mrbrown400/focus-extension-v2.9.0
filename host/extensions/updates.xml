@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
+  <app appid='khmddlpdgplngbdmpmkaojhlbinhalkc'>
+    <updatecheck codebase='https://mrbrown400.github.io/focus-extension-v2.9.0/extensions/focus-extension-v2.9.0.crx' version='2.9.0' />
+  </app>
+</gupdate>

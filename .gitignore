@@ -3,3 +3,6 @@
 
 # Generated manifest
 manifest.json
+
+# macOS metadata
+.DS_Store
